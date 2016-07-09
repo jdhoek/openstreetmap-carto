@@ -11,7 +11,8 @@
     text-name: "[addr:housenumber]";
     text-placement: interior;
     text-min-distance: 1;
-    text-wrap-width: 0;
+    text-wrap-width: 50;
+    text-wrap-character: ",";
     text-face-name: @book-fonts;
     text-fill: #666;
     text-size: 9;
