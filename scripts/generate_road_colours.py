@@ -32,6 +32,7 @@ class Color:
 def main():
     parser = argparse.ArgumentParser(description='Generates road colours')
     parser.add_argument('-v', '--verbose', dest='verbose', help='Generates information about colour differences', action='store_true', default=False)
+    parser.add_argument('-s', '--shield', dest='shield', help='Generate colour statements for shields script', action='store_true', default=False)
     args = parser.parse_args()
 
     settings = yaml.load(open('road-colors.yaml', 'r'))
@@ -62,7 +63,7 @@ def main():
     # The higher the road classification, the higher its saturation. Conversely,
     # the roads get brighter towards the lower end of the classification.
 
-    classes = settings['classes']
+    classes = settings['classes']['shield' if args.shield else 'mss']
     for cls, params in classes.iteritems():
         l = params['lightness']
         c = params['chroma']
@@ -84,20 +85,33 @@ def main():
             l += delta_l
 
     # Print a warning about the nature of these definitions.
-    print "/* This is generated code, do not change this file manually.         */"
-    print "/*                                                                   */"
-    print "/* To change these definitions, alter road-colors.yaml and run:      */"
-    print "/*                                                                   */"
-    print "/*   ./scripts/generate_road_colours.py > road-colors-generated.mss  */"
-    print "/*                                                                   */"
+    if args.shield:
+        print "# These colour values are generated, do not change manually."
+        print "# To change these definitions, alter road-colors.yaml and copy the output of"
+        print "# ./scripts/generate_road_colours.py --shield"
+        print ""
+    else:
+        print "/* This is generated code, do not change this file manually.         */"
+        print "/*                                                                   */"
+        print "/* To change these definitions, alter road-colors.yaml and run:      */"
+        print "/*                                                                   */"
+        print "/*   ./scripts/generate_road_colours.py > road-colors-generated.mss  */"
+        print "/*                                                                   */"
 
 
     for line_name, line_colours in colours.iteritems():
         for name, colour in line_colours.iteritems():
-            if args.verbose:
-                line = "@{name}-{line_name}: {rgb}; // {lch}, error {delta:.1f}"
+            if args.shield:
+                if args.verbose:
+                    line = """  config['{name}']['{line_name}'] = '{rgb}' # {lch}, error {delta:.1f}"""
+                else:
+                    line = """  config['{name}']['{line_name}'] = '{rgb}'"""
             else:
-                line = "@{name}-{line_name}: {rgb};"
+                if args.verbose:
+                    line = "@{name}-{line_name}: {rgb}; // {lch}, error {delta:.1f}"
+                else:
+                    line = "@{name}-{line_name}: {rgb};"
+
             print line.format(name = name, line_name=line_name, rgb = colour.rgb(), lch = colour.lch(), delta = colour.rgb_error())
 
 if __name__ == "__main__":
