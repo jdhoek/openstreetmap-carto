@@ -28,7 +28,6 @@ class Color:
         return delta_e_cie2000(convert_color(self.m_lch, LabColor),
                                convert_color(sRGBColor.new_from_rgb_hex(self.rgb()), LabColor))
 
-
 def main():
     parser = argparse.ArgumentParser(description='Generates road colours')
     parser.add_argument('-v', '--verbose', dest='verbose', help='Generates information about colour differences', action='store_true', default=False)
@@ -97,7 +96,6 @@ def main():
         print "/*                                                                   */"
         print "/*   ./scripts/generate_road_colours.py > road-colors-generated.mss  */"
         print "/*                                                                   */"
-
 
     for line_name, line_colours in colours.iteritems():
         for name, colour in line_colours.iteritems():
