@@ -7,6 +7,7 @@ roads:
     - trunk
     - primary
     - secondary
+    - tertiary
 
 # The starting and ending hue. The range goes from 0 to 360, with 0 and 360
 # representing red.
@@ -17,11 +18,11 @@ hue: [10, 106]
 # Chroma ranges from 0 to 100 too; unsaturated to fully saturated.
 classes:
     fill:
-        lightness: [70, 97]
-        chroma: [35, 29]
+        lightness: [70, 99]
+        chroma: [35, 16]
     casing:
-        lightness: [50, 50]
-        chroma: [70, 55]
+        lightness: [50, 65]
+        chroma: [70, 36]
     low-zoom:
         lightness: [62, 92]
         chroma: [50, 40]

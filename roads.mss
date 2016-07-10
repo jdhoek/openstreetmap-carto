@@ -1,6 +1,5 @@
 /* For the main linear features, such as roads and railways. */
 
-@tertiary-fill: #ffffff;
 @residential-fill: #ffffff;
 @service-fill: @residential-fill;
 @living-street-fill: #ededed;
@@ -18,7 +17,6 @@
 @helipad-fill: @aeroway-fill;
 
 @default-casing: white;
-@tertiary-casing: #8f8f8f;
 @residential-casing: #bbb;
 @road-casing: @residential-casing;
 @service-casing: @residential-casing;
@@ -30,8 +28,6 @@
 @cycleway-casing: @default-casing;
 @bridleway-casing: @default-casing;
 @track-casing: @default-casing;
-
-@tertiary-shield: #3b3b3b;
 
 @unimportant-road: @residential-casing;
 
@@ -90,7 +86,7 @@
 @trunk-width-z13:                 6;
 @primary-width-z13:               5;
 @secondary-width-z13:             5;
-@tertiary-width-z13:              4;
+@tertiary-width-z13:              3.75;
 @residential-width-z13:           2.5;
 @living-street-width-z13:         2;
 @pedestrian-width-z13:            2;
@@ -104,7 +100,7 @@
 @steps-width-z13:                 0.7;
 
 @secondary-width-z14:             5;
-@tertiary-width-z14:              5;
+@tertiary-width-z14:              4;
 @residential-width-z14:           3;
 @living-street-width-z14:         3;
 @pedestrian-width-z14:            3;
@@ -130,7 +126,7 @@
 @steps-width-z15:                 3;
 
 @secondary-width-z16:            10;
-@tertiary-width-z16:             10;
+@tertiary-width-z16:              8;
 @residential-width-z16:           6;
 @living-street-width-z16:         6;
 @pedestrian-width-z16:            6;
@@ -145,7 +141,7 @@
 @trunk-width-z17:                18;
 @primary-width-z17:              18;
 @secondary-width-z17:            18;
-@tertiary-width-z17:             18;
+@tertiary-width-z17:             15;
 @residential-width-z17:          12;
 @living-street-width-z17:        12;
 @pedestrian-width-z17:           12;
@@ -158,7 +154,7 @@
 @trunk-width-z18:                21;
 @primary-width-z18:              21;
 @secondary-width-z18:            21;
-@tertiary-width-z18:             21;
+@tertiary-width-z18:             17;
 @residential-width-z18:          13;
 @living-street-width-z18:        13;
 @pedestrian-width-z18:           13;
@@ -171,7 +167,7 @@
 @trunk-width-z19:                27;
 @primary-width-z19:              27;
 @secondary-width-z19:            27;
-@tertiary-width-z19:             27;
+@tertiary-width-z19:             22;
 @residential-width-z19:          17;
 @living-street-width-z19:        17;
 @pedestrian-width-z19:           17;
