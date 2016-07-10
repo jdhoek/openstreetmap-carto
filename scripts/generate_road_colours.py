@@ -3,6 +3,7 @@
 from colormath.color_conversions import convert_color
 from colormath.color_objects import LabColor, LCHabColor, sRGBColor
 from colormath.color_diff import delta_e_cie2000
+import argparse
 import sys
 import yaml
 
@@ -27,20 +28,12 @@ class Color:
         return delta_e_cie2000(convert_color(self.m_lch, LabColor),
                                convert_color(sRGBColor.new_from_rgb_hex(self.rgb()), LabColor))
 
-
 def main():
-    # Print a warning about the nature of these definitions.
-    print "/* This is generated code, do not change this file manually.         */"
-    print "/*                                                                   */"
-    print "/* To change these definitions, alter road-colors.yaml and run:      */"
-    print "/*                                                                   */"
-    print "/*   ./scripts/generate_road_colours.py > road-colors-generated.mss  */"
-    print "/*                                                                   */"
+    parser = argparse.ArgumentParser(description='Generates road colours')
+    parser.add_argument('-v', '--verbose', dest='verbose', help='Generates information about colour differences', action='store_true', default=False)
+    parser.add_argument('-s', '--shield', dest='shield', help='Generate colour statements for shields script', action='store_true', default=False)
+    args = parser.parse_args()
 
-    verbose = False
-    if len(sys.argv) == 2:
-        if sys.argv[1] == "-v":
-            verbose = True
     settings = yaml.load(open('road-colors.yaml', 'r'))
 
     road_classes = settings['roads']
@@ -69,7 +62,7 @@ def main():
     # The higher the road classification, the higher its saturation. Conversely,
     # the roads get brighter towards the lower end of the classification.
 
-    classes = settings['classes']
+    classes = settings['classes']['shield' if args.shield else 'mss']
     for cls, params in classes.iteritems():
         l = params['lightness']
         c = params['chroma']
@@ -84,18 +77,40 @@ def main():
         l = line_colour_info.start_l
         delta_l = (line_colour_info.end_l - line_colour_info.start_l) / colour_divisions
 
+        colours[line_name] = OrderedDict()
         for name in road_classes:
-            colours[name + "-" + line_name] = Color((l, c, hues[name]))
+            colours[line_name][name] = Color((l, c, hues[name]))
             c += delta_c
             l += delta_l
 
-    for name, colour in colours.iteritems():
-        if verbose:
-            line = "@{name}: {rgb}; // {lch}, error {delta:.1f}"
-        else:
-            line = "@{name}: {rgb};"
-        print line.format(name = name, rgb = colour.rgb(), lch = colour.lch(), delta = colour.rgb_error())
+    # Print a warning about the nature of these definitions.
+    if args.shield:
+        print "# These colour values are generated, do not change manually."
+        print "# To change these definitions, alter road-colors.yaml and copy the output of"
+        print "# ./scripts/generate_road_colours.py --shield"
+        print ""
+    else:
+        print "/* This is generated code, do not change this file manually.         */"
+        print "/*                                                                   */"
+        print "/* To change these definitions, alter road-colors.yaml and run:      */"
+        print "/*                                                                   */"
+        print "/*   ./scripts/generate_road_colours.py > road-colors-generated.mss  */"
+        print "/*                                                                   */"
 
+    for line_name, line_colours in colours.iteritems():
+        for name, colour in line_colours.iteritems():
+            if args.shield:
+                if args.verbose:
+                    line = """  config['{name}']['{line_name}'] = '{rgb}' # {lch}, error {delta:.1f}"""
+                else:
+                    line = """  config['{name}']['{line_name}'] = '{rgb}'"""
+            else:
+                if args.verbose:
+                    line = "@{name}-{line_name}: {rgb}; // {lch}, error {delta:.1f}"
+                else:
+                    line = "@{name}-{line_name}: {rgb};"
+
+            print line.format(name = name, line_name=line_name, rgb = colour.rgb(), lch = colour.lch(), delta = colour.rgb_error())
 
 if __name__ == "__main__":
     main()
